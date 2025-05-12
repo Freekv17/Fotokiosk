@@ -41,10 +41,6 @@ class Program
                         Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
                     }
 
-                    if (!stationSelected)
-                    {
-                        Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
-                    }
                 }
                 
             }
