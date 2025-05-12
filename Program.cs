@@ -17,47 +17,52 @@ class Program
                 string query = "SELECT * FROM netherlands_train_stations;";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 MySqlDataReader reader = cmd.ExecuteReader();
+                Console.WriteLine("Kies uit op welk station je staat.\n");
+                string selectStation = Console.ReadLine();
 
                 while (stationSelected == false)
                 {
-                    Console.WriteLine("Kies uit op welk station je staat.");
-                    string selectStation = Console.ReadLine();
-                    Console.Clear();
-
                     while (reader.Read())
                     {
                         string stationName = reader["name"].ToString();
-                        //Console.WriteLine(stationName);
 
-
-                        // Optional comparison
                         if (selectStation.ToLower() == stationName.ToLower())
                         {
-                            Console.WriteLine("Station selected: " + stationName);
+                            Console.Clear();
+                            Console.WriteLine("Geselecteerd station: " + stationName);
                             stationSelected = true;
-                            reader.Close();
-                            conn.Close();
-                            break;
-                        }
-                        else
-                        {
+                            System.Threading.Thread.Sleep(1000);
                             Console.Clear();
                         }
-                    }
 
+                    }
                     if (!stationSelected)
                     {
                         Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
                     }
+
                 }
+                
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            while (stationSelected)
+            if (stationSelected == true)
             {
-                //Console.WriteLine("");
+                Console.WriteLine("Vul uw naam in\n");
+                string name = Console.ReadLine();
+                if (name == null)
+                {
+                    name = "Anoniem";
+                }
+                Console.Clear();
+                Console.WriteLine("Schrijf een klein berichtje over het station\n");
+                string shortMessage = Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine("Schrijf je mening over het station");
+                string longMessage = Console.ReadLine();
+                Console.Clear();
             }
         }
     }
