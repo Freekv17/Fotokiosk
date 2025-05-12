@@ -44,6 +44,11 @@ class Program
                             Console.Clear();
                         }
                     }
+
+                    if (!stationSelected)
+                    {
+                        Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
+                    }
                 }
             }
             catch (Exception ex)
