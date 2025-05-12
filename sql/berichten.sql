@@ -32,7 +32,7 @@ CREATE TABLE `berichten` (
   `naam` varchar(255) NOT NULL,
   `kleinBericht` varchar(100) NOT NULL,
   `grootBericht` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `goedgekeurd` tinyint(1) NOT NULL DEFAULT '0',
+  `gekeurd` VARCHAR(255) NOT NULL DEFAULT 'nietGekeurd',
   `station` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
