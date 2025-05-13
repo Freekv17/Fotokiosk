@@ -54,6 +54,8 @@ class Program
                     {
                         Console.Clear();
                         Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
+                        
+                        reader.Close();
                     }
                 }
             }
