@@ -16,12 +16,15 @@ class Program
                 conn.Open();
                 string query = "SELECT * FROM netherlands_train_stations;";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                Console.WriteLine("Kies uit op welk station je staat.\n");
-                string selectStation = Console.ReadLine();
+                
+                
 
                 while (stationSelected == false)
                 {
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    Console.WriteLine("Kies uit op welk station je staat.\n");
+                    string selectStation = Console.ReadLine();
+                    Console.Clear();
                     while (reader.Read())
                     {
                         string stationName = reader["name"].ToString();
@@ -39,6 +42,8 @@ class Program
                     if (!stationSelected)
                     {
                         Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
+                        
+                        reader.Close();
                     }
 
                 }
