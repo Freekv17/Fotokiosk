@@ -44,6 +44,7 @@ class Program
                                 stationSelected = true;
                                 selectStation = reader["name"].ToString();
                                 Thread.Sleep(1000);
+                                reader.Close();
                                 Console.Clear();
                                 break;
                             }
@@ -54,8 +55,6 @@ class Program
                     {
                         Console.Clear();
                         Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
-                        
-                        reader.Close();
                     }
                 }
             }
@@ -98,15 +97,10 @@ class Program
                         Console.Clear();
                     }
 
-                    Console.WriteLine("Enter om te bevestigen of type annuleer om te weizigen of stoppen\n");
+                    Console.WriteLine("Enter om te bevestigen of type annuleer om te stoppen\n");
                     string confirmation = Console.ReadLine().ToString();
                     if (confirmation.ToLower() == "annuleer")
                     {
-                        //Console.WriteLine("Uw bericht over het station");
-                        //Console.WriteLine(shortMessage);
-                        //Console.WriteLine("Uw mening:\n");
-                        //Console.WriteLine(longMessage);
-                        //Console.WriteLine("Of type stop om te stoppen");
                         Console.Clear();
                         isRepeating = false;
                     }
