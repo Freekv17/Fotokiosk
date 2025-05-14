@@ -97,6 +97,7 @@ internal class Program
                         string enqueteName = reader["naam"].ToString();
                         string kleinBericht = reader["kleinBericht"].ToString();
                         string grootBericht = reader["grootBericht"].ToString();
+                        string gemaakt = reader["gemaakt"].ToString();
 
 
                         bool foutGekeurd = true;
@@ -107,6 +108,7 @@ internal class Program
                             Console.WriteLine("Naam: " + enqueteName);
                             Console.WriteLine("Klein bericht: " + kleinBericht);
                             Console.WriteLine("Groot bericht: " + grootBericht);
+                            Console.WriteLine("Gemaakt: " + gemaakt);    
 
                             Console.WriteLine("\nDruk [1] om goed te keuren");
                             Console.WriteLine("Druk [2] om af te keuren");
