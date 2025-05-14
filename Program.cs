@@ -1,8 +1,10 @@
-﻿using Google.Protobuf;
+﻿using Spectre.Console;
+using Spectre.Console.Cli;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data.SqlClient;
 using System.Threading;
+using System.Collections.Generic;
 
 class Program
 {
@@ -23,47 +25,40 @@ class Program
 
                 while (!stationSelected)
                 {
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        Console.WriteLine("Kies uit op welk station je staat.\n");
-                        while (reader.Read())
-                        {
-                            Console.WriteLine(reader["name"].ToString());
-                        }
-                    }
-                    Console.WriteLine();
-                    selectStation = Console.ReadLine();
+                    List<string> stations = new List<string>();
+
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            if (selectStation.Equals(reader["name"].ToString(), StringComparison.OrdinalIgnoreCase))
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Geselecteerd station: " + reader["name"].ToString());
-                                stationSelected = true;
-                                selectStation = reader["name"].ToString();
-                                Thread.Sleep(1000);
-                                reader.Close();
-                                Console.Clear();
-                                break;
-                            }
+                            stations.Add(reader["name"].ToString());
                         }
                     }
 
-                    if (!stationSelected)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
-                    }
+                    Console.WriteLine("Kies uit op welk station je staat.\n");
+
+                    selectStation = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("Which [green]station[/] is this?")
+                            .PageSize(10)
+                            .MoreChoicesText("[blue](Move up and down to reveal more stations)[/]")
+                            .AddChoices(stations)
+                    );
+
+                    // Confirm selection
+                    Console.Clear();
+                    Console.WriteLine("Geselecteerd station: " + selectStation);
+                    Thread.Sleep(1000);
+                    Console.Clear();
+
+                    stationSelected = true;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            while (stationSelected == true)
+        while (stationSelected == true)
             {
                 bool isRepeating = false;
                 Console.WriteLine("Vul uw naam in\n");
@@ -71,7 +66,7 @@ class Program
                 isRepeating = true;
                 while (isRepeating)
                 {
-                    if (name == null)
+                    if (name == "")
                     {
                         name = "Anoniem";
                     }
