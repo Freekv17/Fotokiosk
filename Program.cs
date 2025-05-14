@@ -44,6 +44,7 @@ class Program
                                 stationSelected = true;
                                 selectStation = reader["name"].ToString();
                                 Thread.Sleep(1000);
+                                reader.Close();
                                 Console.Clear();
                                 break;
                             }
@@ -54,8 +55,6 @@ class Program
                     {
                         Console.Clear();
                         Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
-                        
-                        reader.Close();
                     }
                 }
             }
