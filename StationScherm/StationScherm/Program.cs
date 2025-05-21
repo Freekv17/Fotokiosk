@@ -53,7 +53,6 @@ class Program
 
                             if (selectStation.ToLower() == stationName.ToLower())
                             {
-                                Console.WriteLine("Geselecteerd station: " + reader["name"].ToString());
                                 stationSelected = true;
                                 reader.Close();
                                 break;
@@ -113,47 +112,47 @@ class Program
                         ));
                     }
 
-                    if (newMessagesFound)
+                    
+                    Console.WriteLine("Station: " + selectStation);
+                    DateTime nu = DateTime.Now;
+                    Console.WriteLine("Datum: " + nu.ToShortDateString() + " Tijd: " + nu.ToShortTimeString());
+                    Console.WriteLine(" ");
+
+                    try
                     {
-                        Console.Clear();
-                        Console.WriteLine("Station: " + selectStation);
-                        DateTime nu = DateTime.Now;
-                        Console.WriteLine("Datum: " + nu.ToShortDateString() + " Tijd: " + nu.ToShortTimeString());
-                        Console.WriteLine(" ");
+                        HttpResponseMessage response = await Client.GetAsync(url);
+                        response.EnsureSuccessStatusCode();
 
-                        try
+                        string json = await response.Content.ReadAsStringAsync();
+
+                        using (JsonDocument doc = JsonDocument.Parse(json))
                         {
-                            HttpResponseMessage response = await Client.GetAsync(url);
-                            response.EnsureSuccessStatusCode();
+                            var root = doc.RootElement;
 
-                            string json = await response.Content.ReadAsStringAsync();
-
-                            using (JsonDocument doc = JsonDocument.Parse(json))
+                            if (root.TryGetProperty("current", out JsonElement current))
                             {
-                                var root = doc.RootElement;
+                                float temperature = current.GetProperty("temperature_2m").GetSingle();
+                                float rain = current.GetProperty("rain").GetSingle();
 
-                                if (root.TryGetProperty("current", out JsonElement current))
-                                {
-                                    float temperature = current.GetProperty("temperature_2m").GetSingle();
-                                    float rain = current.GetProperty("rain").GetSingle();
-
-                                    Console.WriteLine($"Temperatuur: {temperature} °C");
-                                    Console.WriteLine($"Neerslag: {rain} mm");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Geen 'current' weerdata gevonden.");
-                                }
+                                Console.WriteLine($"Temperatuur: {temperature} °C");
+                                Console.WriteLine($"Neerslag: {rain} mm");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Geen 'current' weerdata gevonden.");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error fetching weather data: {ex.Message}");
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error fetching weather data: {ex.Message}");
+                    }
 
-                        Console.WriteLine(" ");
-                        Console.WriteLine("\nMeningen van station: " + selectStation + "\n");
+                    Console.WriteLine(" ");
+                    Console.WriteLine("\nMeningen van station: " + selectStation + "\n");
 
+                    if (berichten.Any())
+                    {
                         foreach (var bericht in berichten)
                         {
                             Console.WriteLine("Naam: " + bericht.naam);
@@ -164,9 +163,14 @@ class Program
 
                         lastShownTime = newestBerichtTime;
                     }
+                    else
+                    {
+                        Console.WriteLine("Geen nieuwe berichten;");
+                    }
                 }
 
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
+                Console.Clear();
             }
         }
     }
