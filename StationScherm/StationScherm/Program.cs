@@ -18,7 +18,6 @@ class Program
 
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            string selectStation = "";
             string stationName = "";
             bool stationSelected = false;
 
@@ -30,45 +29,33 @@ class Program
 
                 while (!stationSelected)
                 {
+                    List<string> stations = new List<string>();
+
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        Console.WriteLine("Kies uit op welk station je staat.\n");
                         while (reader.Read())
                         {
-                            Console.WriteLine(reader["name"].ToString());
+                            stations.Add(reader["name"].ToString());
                         }
                     }
 
-                    Console.WriteLine();
-                    selectStation = Console.ReadLine();
+                    Console.WriteLine("Kies uit op welk station je staat.\n");
+
+                    stationName = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("Which [green]station[/] is this?")
+                            .PageSize(10)
+                            .MoreChoicesText("[blue](Move up and down to reveal more stations)[/]")
+                            .AddChoices(stations)
+                    );
+
+                    // Confirm selection
+                    Console.Clear();
+                    Console.WriteLine("Geselecteerd station: " + stationName);
+                    Thread.Sleep(1000);
                     Console.Clear();
 
-                    using (MySqlCommand checkCmd = new MySqlCommand(query, conn))
-
-                    using (MySqlDataReader reader = checkCmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            stationName = reader["name"].ToString();
-
-                            if (selectStation.ToLower() == stationName.ToLower())
-                            {
-                                stationSelected = true;
-                                reader.Close();
-                                break;
-                            }
-                            else
-                            {
-                                Console.Clear();
-                            }
-                        }
-                    }
-
-                    if (!stationSelected)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
-                    }
+                    stationSelected = true;
                 }
             }
             catch (Exception ex)
@@ -149,7 +136,7 @@ class Program
                     }
 
                     Console.WriteLine(" ");
-                    Console.WriteLine("\nMeningen van station: " + selectStation + "\n");
+                    Console.WriteLine("\nMeningen van station: " + stationName + "\n");
 
                     if (berichten.Any())
                     {
