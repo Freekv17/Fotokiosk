@@ -113,7 +113,7 @@ class Program
                     }
 
                     
-                    Console.WriteLine("Station: " + selectStation);
+                    Console.WriteLine("Station: " + stationName);
                     DateTime nu = DateTime.Now;
                     Console.WriteLine("Datum: " + nu.ToShortDateString() + " Tijd: " + nu.ToShortTimeString());
                     Console.WriteLine(" ");
