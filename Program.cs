@@ -14,7 +14,7 @@ class Program
 
         using (MySqlConnection conn = new MySqlConnection(connectionString))
         {
-            string selectStation = "";
+            string stationName = "";
             bool stationSelected = false;
 
             try
@@ -37,17 +37,17 @@ class Program
 
                     Console.WriteLine("Kies uit op welk station je staat.\n");
 
-                    selectStation = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Which [green]station[/] is this?")
-                            .PageSize(10)
-                            .MoreChoicesText("[blue](Move up and down to reveal more stations)[/]")
-                            .AddChoices(stations)
-                    );
+                    stationName = AnsiConsole.Prompt(
+                       new SelectionPrompt<string>()
+                           .Title("Welk [green]station[/] is dit?")
+                           .PageSize(10)
+                           .MoreChoicesText("[blue](Beweeg naar boven en beneden om meer stations te laten zien)[/]")
+                           .AddChoices(stations)
+                   );
 
                     // Confirm selection
                     Console.Clear();
-                    Console.WriteLine("Geselecteerd station: " + selectStation);
+                    Console.WriteLine("Geselecteerd station: " + stationName);
                     Thread.Sleep(1000);
                     Console.Clear();
 
@@ -61,7 +61,8 @@ class Program
         while (stationSelected == true)
             {
                 bool isRepeating = false;
-                Console.WriteLine("Vul uw naam in\n");
+                Console.WriteLine("Vul uw naam in");
+                AnsiConsole.Markup("[bold][grey]Vul niks in om anoniem te zijn.[/][/]\n\n");
                 string name = Console.ReadLine().ToString();
                 isRepeating = true;
                 while (isRepeating)
@@ -108,10 +109,10 @@ class Program
                             command.Parameters.AddWithValue("@name", name);
                             command.Parameters.AddWithValue("@shortMessage", shortMessage);
                             command.Parameters.AddWithValue("@longMessage", longMessage);
-                            command.Parameters.AddWithValue("@station", selectStation);
+                            command.Parameters.AddWithValue("@station", stationName);
 
                             int rowsAffected = command.ExecuteNonQuery();
-                            Console.WriteLine("Bedankt voor uw bericht!");
+                            AnsiConsole.Markup("[green]Bedankt voor uw bericht![/]");
                             System.Threading.Thread.Sleep(1000);
                             Console.Clear();
                             isRepeating = false;

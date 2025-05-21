@@ -42,12 +42,12 @@ class Program
                     Console.WriteLine("Kies uit op welk station je staat.\n");
 
                     stationName = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Which [green]station[/] is this?")
-                            .PageSize(10)
-                            .MoreChoicesText("[blue](Move up and down to reveal more stations)[/]")
-                            .AddChoices(stations)
-                    );
+                       new SelectionPrompt<string>()
+                           .Title("Welk [green]station[/] is dit?")
+                           .PageSize(10)
+                           .MoreChoicesText("[blue](Beweeg naar boven en beneden om meer stations te laten zien)[/]")
+                           .AddChoices(stations)
+                   );
 
                     // Confirm selection
                     Console.Clear();

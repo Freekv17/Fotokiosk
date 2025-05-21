@@ -1,5 +1,10 @@
 ﻿using MySql.Data.MySqlClient;
-
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading;
+using Spectre.Console;
 internal class Program
 {
 
@@ -17,35 +22,35 @@ internal class Program
                 string query = "SELECT * FROM netherlands_train_stations;";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
 
-                while (stationSelected == false)
+                while (!stationSelected)
                 {
-                    MySqlDataReader reader = cmd.ExecuteReader();
-                    Console.WriteLine("Kies op welk station je staat.");
-                    string selectStation = Console.ReadLine();
+                    List<string> stations = new List<string>();
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            stations.Add(reader["name"].ToString());
+                        }
+                    }
+
+                    Console.WriteLine("Kies uit op welk station je staat.\n");
+
+                    stationName = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("Welk [green]station[/] is dit?")
+                            .PageSize(10)
+                            .MoreChoicesText("[blue](Beweeg naar boven en beneden om meer stations te laten zien)[/]")
+                            .AddChoices(stations)
+                    );
+
+                    // Confirm selection
+                    Console.Clear();
+                    Console.WriteLine("Geselecteerd station: " + stationName);
+                    Thread.Sleep(1000);
                     Console.Clear();
 
-                    while (reader.Read())
-                    {
-                        stationName = reader["name"].ToString();
-
-                        if (selectStation.ToLower() == stationName.ToLower())
-                        {
-                            Console.WriteLine("Station geselecteerd: " + stationName);
-                            stationSelected = true;
-                            reader.Close();
-                            break;
-                        }
-                        else
-                        {
-                            Console.Clear();
-                        }
-                    }
-
-                    if (!stationSelected)
-                    {
-                        Console.WriteLine("Error: Station " + selectStation + " bestaat niet, probeer het opnieuw.");
-                        reader.Close();
-                    }
+                    stationSelected = true;
                 }
             }
             catch (Exception ex)
